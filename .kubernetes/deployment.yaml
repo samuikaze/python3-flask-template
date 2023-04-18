@@ -1,0 +1,40 @@
+# deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: <APPLICATION_NAME>
+  namespace: <NAMESPACE>
+  labels:
+    app_name: <APPLICATION_NAME>
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app_name: <APPLICATION_NAME>
+  template:
+    metadata:
+      labels:
+        app_name: <APPLICATION_NAME>
+    spec:
+      containers:
+        - name: <APPLICATION_NAME>
+          image: <REGISTRY_URL>/<IMAGE_NAME>:latest
+          ports:
+            - containerPort: 80
+              protocol: TCP
+
+---
+# service-deploy.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: <APPLICATION_NAME>
+  namespace: <NAMESPACE>
+spec:
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  selector:
+    app_name: <APPLICATION_NAME>
+  type: ClusterIP
